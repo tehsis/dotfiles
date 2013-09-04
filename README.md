@@ -6,7 +6,8 @@ These package will make your shell rocks
 Usage
 -----
 
-@./install.sh@
+@install.sh@
+
 
 Content
 -------
