@@ -23,13 +23,9 @@ else
   echo "Error: Make sure you have zsh installed on your system."
 fi
 
-if [[ -x $(command -v vim) ]]
-then
-  backupCopy `pwd`/vim ~/.vim 
-  backupCopy `pwd`/vimrc ~/.vimrc 
-else
-  echo "Error: vim not found."
-fi
+backupCopy `pwd`/vim ~/.vim 
+backupCopy `pwd`/vimrc ~/.vimrc 
+backupCopy `pwd`/zshrc ~/.zshrc 
 
 if [[ -x $(command -v terminator) ]] 
 then
