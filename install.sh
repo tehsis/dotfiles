@@ -3,10 +3,16 @@
 # Copies the dotfiles to its corresponding location.
 # All removed files are saved as ./original_file_backup
 
+set -e
+
 function backupCopy {
- print "* Copying "$1 "..."
- [[ -a $2 ]] && cp -r $2 ./$1"_backup" && echo "** Original files backed up to "$1"_backup ..."  && rm -r $2 
- cp -r $1 $2 && echo "** Done!"
+ echo "* Copying "$1 "..."
+ if [[ -a $2 ]] cp -r $2 $1"_backup" 
+ echo "** Original files backed up to "$1"_backup ..."  
+ echo "Removing $2 ..."
+ rm -rf $2 
+ echo "Creating symlink to $1 in $2"
+ ln -s $1 $2 && echo "** Done!"
 }
 
 if [[ -x $(command -v zsh) ]]
@@ -19,7 +25,8 @@ fi
 
 if [[ -x $(command -v vim) ]]
 then
-  backupCopy vim ~/.vim && backupCopy vimrc ~/.vimrc 
+  backupCopy `pwd`/vim ~/.vim 
+  backupCopy `pwd`/vimrc ~/.vimrc 
 else
   echo "Error: vim not found."
 fi
