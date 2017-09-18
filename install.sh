@@ -1,37 +1,51 @@
-#!/bin/zsh
-# @tehsis
-# Copies the dotfiles to its corresponding location.
-# All removed files are saved as ./original_file_backup
+$uname=`uname`
 
 set -e
 
-function backupCopy {
- echo "* Copying "$1 "..."
- if [[ -a $2 ]] cp -r $2 $1"_backup" 
- echo "** Original files backed up to "$1"_backup ..."  
- echo "Removing $2 ..."
- rm -rf $2 
- echo "Creating symlink to $1 in $2"
- ln -s $1 $2 && echo "** Done!"
+function install() {
+  echo "Installing $1..."
+  if [[ $uname -eq "Darwin" ]]
+    brew install $1
+  then
+  fi
 }
 
-if [[ -x $(command -v zsh) ]]
+function cpIfNotExists() {
+    if [[ ! -f $2  ]]
+      echo "Copying $1 to $2"
+      cp $1 $2
+    then
+      echo "$2 already exists!"
+    fi
+}
+
+if [[ $uname -eq "Darwin" ]]
 then
-  echo "Installing oh-my-zsh..."
-  [[ -a ~/.oh-my-zsh ]] && echo "Good! you already have Oh-my-zsh" || curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
+   echo "Installing Homebrew... (https://brew.sh/)"
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
+
+if [[ ! -f ~/.oh-my-zsh ]]
+then
+echo "Installing OhMyZsh... (https://github.com/robbyrussell/oh-my-zsh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 else
-  echo "Error: Make sure you have zsh installed on your system."
+    echo "~/.oh-my-zsh found!"
 fi
 
-backupCopy `pwd`/vim ~/.vim 
-backupCopy `pwd`/vimrc ~/.vimrc 
-backupCopy `pwd`/zshrc ~/.zshrc 
+install "git"
+install "tmux"
 
-if [[ -x $(command -v terminator) ]] 
+if [[ ! -f ~/.vimrc ]]
 then
-  backupCopy config/terminator ~/.config/terminator 
-else 
- print "Error: terminator not found."
+echo "Install Ultimate vimrc (https://github.com/amix/vimrc)"
+git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
+sh ~/.vim_runtime/install_awesome_vimrc.sh
+else
+    echo "~/.vimrc found!"
 fi
 
-echo "Completed!"
+echo "Copying configuration files.."
+
+cpIfNotExists ./vimrc ~/.vimrc
+cpIfNotExists ./zshrc ~/.zshrc

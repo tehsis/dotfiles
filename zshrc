@@ -87,4 +87,11 @@ source $ZSH/oh-my-zsh.sh
   . "$(brew --prefix nvm)/nvm.sh"
 
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+alias a0='function a0cdir() { cd "$HOME/workspace/auth0/$1" }; a0cdir;'
+
+export GOPATH=/Users/tehsis/workspace/personal/go
+
+export PATH=$PATH:$GOPATH/bin
+
+export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="$PATH:$HOME/protoc/bin"
