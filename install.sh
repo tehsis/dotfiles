@@ -1,12 +1,12 @@
-$uname=`uname`
+uname=`uname`
 
 set -e
 
 function install() {
   echo "Installing $1..."
   if [[ $uname -eq "Darwin" ]]
-    brew install $1
   then
+    brew install $1
   fi
 }
 
